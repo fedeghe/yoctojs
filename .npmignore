@@ -2,3 +2,4 @@ node_modules
 source
 mantest
 yarn-error.log
+.printVersion
