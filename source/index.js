@@ -1,0 +1,205 @@
+function _() {
+    function toArr(args) {
+        return [].slice.call(args)
+    }
+    function isArray(o) {
+        if (Array.isArray && Array.isArray(o)) {
+            return true;
+        }
+        var t1 = String(o) !== o,
+            t2 = ({}).toString.call(o).match(/\[object\sArray\]/);
+        return t1 && !!(t2 && t2.length);
+    }
+    function isElement(o) {
+        return (
+            typeof HTMLElement === 'object'
+                ? o instanceof HTMLElement
+                : o && typeof o === 'object' && // DOM2
+                    typeof o.nodeType !== 'undefined' && o.nodeType === 1 &&
+                    typeof o.nodeName === 'string'
+        );
+    }
+
+    var Y = function (s, ctx) {
+        this.els = [];
+        var type = typeof s
+        if (type === 'function') {
+            this.ready(s);
+        } else if ( type === 'string') {
+            if (s.match(/^\</)) {
+                var cnt = document.createElement('div');
+                cnt.innerHTML = s;
+                this.els = [].slice.call(cnt.children);
+            } else {
+                this.els = toArr((ctx || document).querySelectorAll(s));
+            }
+        } else if (isElement(s)) {
+            this.els = [s];
+        } else if (isArray(s)) {
+            this.els = s;
+        }
+    };
+
+    var pro = Y.prototype;
+
+    
+
+
+    pro.forEach= function (f) {
+        this.els.forEach(function(el) {f.bind(el)()})
+    };
+
+    pro.ready= function (f) {
+        document.addEventListener('DOMContentLoaded', f, false);
+    };
+    pro.style= function (v) {
+        this.forEach(function () {
+            for (var k in v) {
+                this.style[k] = v[k];
+            }
+        });
+        return this
+    };
+    pro.setAttrs= function (a) {
+        this.forEach(function () {
+            for (var n in a) {
+                this.setAttribute(n, typeof a[n] === 'function' ? a[n](this) : a[n]);
+            }
+        });
+        return this;
+    };
+    pro.getAttrs= function () {
+        var a = toArr(arguments);
+        return this.els.map(function (el){
+            return a.reduce(function (acc, attr) {
+                acc[attr] = el.getAttribute(attr);
+                return acc;
+            }, {})
+        });
+    };
+    pro.removeAttrs = function () {
+        var a = toArr(arguments);
+        this.forEach(function () {
+            var self = this;
+            a.forEach(function (attr) {
+                self.removeAttribute(attr);
+            });
+        });
+        return this;
+    };
+    pro.on = function (eventType, fn) {
+        return this.forEach(function () {
+            this.addEventListener(eventType, fn, false);
+        });
+    };
+    pro.off = function (type, fn) {
+        return this.forEach(function () {
+            this.removeEventListener(type, fn, false);
+        });
+    },
+    pro.once = function (eventType, fn) {
+        var r = this;
+        this.forEach(function () {
+            r.on(eventType, function h(e) {
+                fn(e);
+                r.off(eventType, h)
+            }, false);
+        });
+        return this;
+    },
+    pro.parent= function () {
+        return this.els.map(function (el) {
+            return el.parentNode;
+        })
+    };
+    pro.get= function(n) {
+        return n < this.els.length ? new Y(this.els[n]) : null;
+    };
+    pro.addClass= function () {
+        var adds = toArr(arguments);
+        this.forEach(function () {
+            var $ = this,
+                cls = $.className.split(/\s/);
+            adds.forEach(function (add) {
+                if (cls.indexOf(add) < 0) {
+                    cls.push(add);
+                }
+            });
+            $.className = cls.join(' ');
+        });
+        return this;
+    };
+    pro.removeClass= function () {
+        var rms = toArr(arguments);
+        this.forEach(function () {
+            var $ = this,
+                cls = $.className.split(/\s/);
+            rms.forEach(function (rm) {
+                var index = cls.indexOf(rm);
+                if (index >= 0) {
+                    cls.splice(index, 1);
+                }
+            });
+            $.className = cls.join(' ');
+        });
+        return this;
+    };
+    pro.replaceClass= function (outClass, inClass) {
+        this.forEach(function () {
+            var $ = this,
+                cls = $.className.split(/\s/),
+                index = cls.indexOf(outClass);
+            if (index >= 0) {
+                cls.splice(index, 1);
+                cls.push(inClass)
+                $.className = cls.join(' ')
+            }
+        });
+        return this;
+    };
+    pro.html = function (h) {
+        if (typeof v === 'undefined') {
+            return this.els.map(function (el) {
+                return el.innerHTML
+            })
+        }
+        this.forEach(function () {
+            this.innerHTML = h
+        })
+        return this
+    };
+    pro.show = function () {
+        this.forEach(function () {
+            this.style.display = 'none';
+        });
+        return this;
+    };
+    pro.hide = function () {
+        this.forEach(function () {
+            this.style.display = '';
+        });
+        return this;
+    };
+    pro.toggle = function () {
+        this.forEach(function () {
+            this.style.display = this.style.display === 'none' ? '' : 'none'
+        })
+        return this;
+    };
+
+
+
+
+
+
+    function factory(sel) {
+        return new Y(sel);
+    };
+    factory.extend = function (f) {
+        if (!(f.name in Y.prototype))
+            Y.prototype[f.name] = function () {
+                f.apply(this, toArr(arguments));
+            };
+    };
+    return factory
+}

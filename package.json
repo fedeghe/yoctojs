@@ -1,6 +1,16 @@
 {
   "name": "yoctojs",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "malta source/build.json"
+  },
+  "devDependencies": {
+    "malta": "^4.1.27",
+    "malta-header-comment": "^1.0.12",
+    "malta-js-uglify": "^1.0.13",
+    "malta-millijs": "^1.0.5",
+    "malta-umd": "^1.0.12"
+  }
 }
