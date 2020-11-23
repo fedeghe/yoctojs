@@ -1,6 +1,6 @@
 {
     "name": "yoctojs",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "Really small dom utility library",
     "main": "dist/index.js",
     "keywords": [],

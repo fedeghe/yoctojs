@@ -1,5 +1,5 @@
 /*
-yoctojs v1.0.0
+yoctojs v0.0.1
 Federico Ghedina <fedeghe@gmail.com>
 ~3.12KB
 */
