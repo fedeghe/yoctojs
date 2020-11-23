@@ -23,15 +23,30 @@ function _() {
     var Y = function (s, ctx) {
         this.els = [];
         var type = typeof s
+        
+        if (ctx) {
+            if (ctx instanceof Y) {
+                ctx = ctx.get(0).els[0]
+            }
+        } else {
+            ctx = Y.ctx || document
+        }
+
+        // if a function then let's treat that as a ready
+        //
         if (type === 'function') {
             this.ready(s);
+
+        // if it's a string could be 
+        // 1) selector
+        // 2) tag to be created
         } else if ( type === 'string') {
             if (s.match(/^\</)) {
-                var cnt = document.createElement('div');
-                cnt.innerHTML = s;
-                this.els = [].slice.call(cnt.children);
+                var tmp = ctx.createElement('div');
+                tmp.innerHTML = s;
+                this.els = [].slice.call(tmp.children);
             } else {
-                this.els = toArr((ctx || document).querySelectorAll(s));
+                this.els = toArr(ctx.querySelectorAll(s));
             }
         } else if (isElement(s)) {
             this.els = [s];
@@ -94,11 +109,11 @@ function _() {
             });
         },
         once: function (eventType, fn) {
-            var r = this;
             this.forEach(function () {
-                r.on(eventType, function h(e) {
+                var $ = this;
+                this.addEventListener(eventType, function h(e) {
                     fn(e);
-                    r.off(eventType, h)
+                    $.removeEventListener(eventType, h, false);
                 }, false);
             });
             return this;
@@ -181,11 +196,30 @@ function _() {
                 this.style.display = this.style.display === 'none' ? '' : 'none'
             })
             return this;
-        }
+        },
+        append: function (what) {
+            this.forEach(function () {
+                var p = this;
+                what.forEach(function () {
+                    p.appendChild(this)
+                })
+            })
+            return this;
+        },
+        // wrap: function (what) {
+        //     this.forEach(function () {
+        //         var p = this.parentNode;
+        //         what.
+        //     })
+        //     return this;
+        // }
     };
-    function factory(sel) {
-        return new Y(sel);
+    function factory(sel, ctx) {
+        return new Y(sel, ctx);
     };
+    factory.setContext = function (ctx) {
+        Y.ctx = ctx.get(0).els[0]
+    }
     factory.extend = function (f) {
         if (!(f.name in Y.prototype))
             Y.prototype[f.name] = function () {
