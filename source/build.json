@@ -3,6 +3,5 @@
         "rm -rf dist",
         "mkdir dist"
     ],
-    "source/index.js": "dist -plugins=malta-umd[name:\"Y\"]...malta-js-uglify...malta-header-comment[name:\"source/header.txt\",nostrict:true]",
-    "!source/index.js": "dist -plugins=malta-umd[name:\"Y\"]...malta-header-comment[name:\"source/header.txt\",nostrict:true]"
+    "#source/index.js": "dist -plugins=malta-umd[name:\"Y\"]...malta-js-uglify...malta-header-comment[name:\"source/header.txt\",nostrict:true]"
 }

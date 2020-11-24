@@ -20,17 +20,10 @@ function _() {
         );
     }
 
-    var Y = function (s, ctx) {
+    var Y = function (s) {
         this.els = [];
         var type = typeof s
         
-        if (ctx) {
-            if (ctx instanceof Y) {
-                ctx = ctx.get(0).els[0]
-            }
-        } else {
-            ctx = Y.ctx || document
-        }
 
         // if a function then let's treat that as a ready
         //
@@ -42,11 +35,11 @@ function _() {
         // 2) tag to be created
         } else if ( type === 'string') {
             if (s.match(/^\</)) {
-                var tmp = ctx.createElement('div');
+                var tmp = document.createElement('div');
                 tmp.innerHTML = s;
                 this.els = [].slice.call(tmp.children);
             } else {
-                this.els = toArr(ctx.querySelectorAll(s));
+                this.els = toArr(document.querySelectorAll(s));
             }
         } else if (isElement(s)) {
             this.els = [s];
@@ -100,7 +93,10 @@ function _() {
         },
         on: function (eventType, fn) {
             return this.forEach(function () {
-                this.addEventListener(eventType, fn, false);
+                var $ = this
+                this.addEventListener(eventType, function (e){
+                    return fn(e, $);
+                }, false);
             });
         },
         off: function (type, fn) {
@@ -169,7 +165,7 @@ function _() {
             return this;
         },
         html : function (h) {
-            if (typeof v === 'undefined') {
+            if (typeof h === 'undefined') {
                 return this.els.map(function (el) {
                     return el.innerHTML
                 })
@@ -214,12 +210,10 @@ function _() {
         //     return this;
         // }
     };
-    function factory(sel, ctx) {
-        return new Y(sel, ctx);
+    function factory(sel) {
+        return new Y(sel);
     };
-    factory.setContext = function (ctx) {
-        Y.ctx = ctx.get(0).els[0]
-    }
+
     factory.extend = function (f) {
         if (!(f.name in Y.prototype))
             Y.prototype[f.name] = function () {

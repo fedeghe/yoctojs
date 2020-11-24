@@ -12,7 +12,8 @@
     },
     "homepage": "https://github.com/fedeghe/yoctojs#readme",
     "scripts": {
-        "build": "malta source/build.json"
+        "build": "malta source/build.json",
+        "buildev": "malta source/buildev.json"
     },
     "devDependencies": {
         "malta": "^4.1.27",

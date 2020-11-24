@@ -1,0 +1,7 @@
+{
+    "EXE": [
+        "rm -rf dist",
+        "mkdir dist"
+    ],
+    "source/index.js": "dist -plugins=malta-umd[name:\"Y\"]...malta-header-comment[name:\"source/header.txt\",nostrict:true]"
+}
