@@ -3,33 +3,38 @@
  */
 const path = require('path'),
     fs = require('fs'),
-    xwatch = require('./xwatch'),
+    xhrWatch = require('./xhrWatch'),
+    wsWatch = require('./wsWatch'),
+    strategies = {
+        xhr: xhrWatch,
+        ws: wsWatch
+    },
+    
     createbWatch = function (type) {
-        bW = new xwatch(type);
-        console.log(bW)
-        script = bW.getScript();
+        bW = new strategies[type]();
+        script = strategies[type].script(type);
 		bW.start();
     };
-
-    
-    
 let script = null,
     bW = null;
     
 function malta_refresh(obj, options) {
+    
     options = options || {};
     if (!('files' in options)) {
 		options.files = [];
     }
+    
     const self = this,
         defaultMode = 'xhr',
-        mode = options.mode || defaultMode,
-        start = new Date(),
-        pluginName = path.basename(path.dirname(__filename)),
+        mode = (options.mode && Object.keys(strategies).includes(options.mode))
+            ? options.mode
+            : defaultMode,
+		start = new Date(),
+		pluginName = path.basename(path.dirname(__filename)),
         baseFolder = path.dirname(obj.name);
     
     !bW && createbWatch(mode);
-    console.log('HEREEEEEE')
 
     let msg,
 		fileNum,
@@ -117,10 +122,8 @@ function malta_refresh(obj, options) {
 			);
 		}
     }
-    console.log('EDEN')
 
 	return (solve, reject) => {
-        console.log(obj)
         fs.writeFile(obj.name, obj.content, err => {
             err && self.doErr(err, obj, pluginName);
             msg = 'plugin ' + pluginName.white() + ' wrote ' + obj.name + ' (' + self.getSize(obj.name) + ')';
