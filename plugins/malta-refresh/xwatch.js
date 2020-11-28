@@ -67,28 +67,20 @@ const WebSocket = require('ws'),
             }).listen(srvPort);
         },
         ws: function start() {
-            console.log('WSSSSSSSSSSSSS')
             const inst = this;
-            console.log(1)
             if (!wss) {
-                console.log(2)
                 wss = new WebSocket.Server({port: srvPort});
-                console.log(3)
                 wss.on('connection', function connection(ws) {
                     inter && clearInterval(inter);
                     inter  = setInterval(() => {
-                        console.log('icheck')
                         inst.check(function (res) {
                             ws.send(res ? JSON.stringify({reload: true}) : '{}');
                         });        
                     }, 1000)
                 });
-                console.log(4)
                 wss.on('close', (/* ws */) =>  {
-                    console.log('closing');
                     inter && clearInterval(inter);
                 });
-                console.log(5)
             }
         }
     },
@@ -113,7 +105,6 @@ function nextReferer() {
 
 
 function Xwatch(type) {
-    console.log('passed', type)
     this.type = type;
     this.files = {
         relative : {},
@@ -129,10 +120,7 @@ Xwatch.prototype.start = function () {
                 srvPort++;
                 findUnusedPort();
             } else {
-                console.log('starting')
-                console.log(starters)
-                console.log(BW.type)
-                starters[BW.type].call(this);
+                starters[BW.type].call(BW);
             }
         })
     })();
@@ -145,12 +133,9 @@ Xwatch.prototype.getScript = function () {
 Xwatch.prototype.addFile = function (type, filePath) {
     
     var BW = this,
-        stats, parse,
-        host, pathname, port, params = {}, lib;
+        stats, parse, lib;
     
     if (!(filePath in this.files[type])) {
-        console.log(this.files)
-        console.log('adding file: ', filePath, type)
         setTimeout(() => {
             try {
                 switch (type) {
@@ -191,7 +176,6 @@ Xwatch.prototype.addFile = function (type, filePath) {
 };
 
 Xwatch.prototype.check = function (cb) {
-    console.log('check')
     var res = false,
         BW = this,
         _path, _url,
@@ -205,7 +189,6 @@ Xwatch.prototype.check = function (cb) {
         Nnet = Object.keys(BW.files.net).length;
 
     // relatives
-    // console.log(BW.files.relative)
     for (_path in BW.files.relative) {
         (function (p){
             try {
@@ -274,6 +257,7 @@ Xwatch.prototype.check = function (cb) {
          * invoke the callback passing res
          */
         if (Irelative == Nrelative && Inet ==Nnet) {
+
             setTimeout(function () {
                 for (tmp in updates.relative) {
                     BW.files.relative[tmp] = updates.relative[tmp];
@@ -281,8 +265,8 @@ Xwatch.prototype.check = function (cb) {
                 for (tmp in updates.net) {
                     BW.files.net[tmp] = updates.net[tmp];
                 }
+                cb(res);
             }, ttr);
-            cb(res);
         }
     }
 };

@@ -65,8 +65,7 @@ WSwatch.prototype.start = function () {
 
 WSwatch.prototype.addFile = function (type, filePath) {
     var BW = this,
-        stats, parse,
-        host, pathname, port, params = {}, lib;
+        stats, parse, lib;
 
     if (!(filePath in this.files[type])) {
         setTimeout(() => {
@@ -119,7 +118,6 @@ WSwatch.prototype.check = function (cb) {
         Nnet = Object.keys(BW.files.net).length;
 
     // relatives
-    // console.log(BW.files.relative)
     for (_path in BW.files.relative) {
         (function (p){
             try {

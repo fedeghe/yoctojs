@@ -6,30 +6,26 @@ const path = require('path'),
     xwatch = require('./xwatch'),
     createbWatch = function (type) {
         bW = new xwatch(type);
-        console.log(bW)
         script = bW.getScript();
 		bW.start();
     };
 
-    
-    
 let script = null,
     bW = null;
-    
+
 function malta_refresh(obj, options) {
     options = options || {};
     if (!('files' in options)) {
-		options.files = [];
+		options.files = 'relative';
     }
     const self = this,
-        defaultMode = 'xhr',
+        defaultMode = 'ws',
         mode = options.mode || defaultMode,
         start = new Date(),
         pluginName = path.basename(path.dirname(__filename)),
         baseFolder = path.dirname(obj.name);
     
     !bW && createbWatch(mode);
-    console.log('HEREEEEEE')
 
     let msg,
 		fileNum,
@@ -117,10 +113,8 @@ function malta_refresh(obj, options) {
 			);
 		}
     }
-    console.log('EDEN')
 
 	return (solve, reject) => {
-        console.log(obj)
         fs.writeFile(obj.name, obj.content, err => {
             err && self.doErr(err, obj, pluginName);
             msg = 'plugin ' + pluginName.white() + ' wrote ' + obj.name + ' (' + self.getSize(obj.name) + ')';
