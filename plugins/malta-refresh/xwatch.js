@@ -48,7 +48,7 @@ const WebSocket = require('ws'),
                     'Content-Type': 'application/javascript',
                     'Access-Control-Allow-Origin' : '*'
                 });
-                inst.check(function (res) {
+                inst.setChangeListener(function (res) {
                     response.end(res ? 'document.location.reload();' : ';');
                 });
             }).listen(srvPort);
@@ -58,16 +58,13 @@ const WebSocket = require('ws'),
             if (!wss) {
                 wss = new WebSocket.Server({port: srvPort});
                 wss.on('connection', function connection(ws) {
-                    inter && clearInterval(inter);
-                    inter = setInterval(() => {
-                        inst.check(function (res) {
-                            wss.clients.forEach(function each(client) {
-                                if (client.readyState === WebSocket.OPEN) {
-                                  client.send(res ? JSON.stringify({reload: true}) : '{}');
-                                }
-                            });
-                        });        
-                    }, 1000)
+                    inst.setChangeListener(function (res) {
+                        wss.clients.forEach(function each(client) {
+                            if (client.readyState === WebSocket.OPEN) {
+                              client.send(res ? JSON.stringify({reload: true}) : '{}');
+                            }
+                        });
+                    });
                 });
                 wss.on('close', (/* ws */) =>  {
                     inter && clearInterval(inter);
@@ -81,9 +78,15 @@ let wss = null,         // WS
 
 function Xwatch(type) {
     this.type = type;
-    this.files = {};
+    this.files = [];
 }
-
+Xwatch.prototype.setChangeListener = function (cb) {
+    this.files.forEach(file => {
+        fs.watch(file, () => {
+            cb(true)
+        })
+    })
+};
 Xwatch.prototype.start = function () {
     const BW = this,
         isPortTaken = (port, fn) => {
@@ -114,15 +117,13 @@ Xwatch.prototype.getScript = function () {
     return scripts[this.type];
 }
 
-Xwatch.prototype.addFile = function (filePath) {    
-    if (!(filePath in this.files)) {
+Xwatch.prototype.addFile = function (filePath) {   
+    const index = this.files.indexOf(filePath) 
+    if (index < 0) {
         setTimeout(() => {
             try {        
                 if (fs.existsSync(filePath)) {
-                    const stats = fs.statSync(filePath);
-                    this.files[filePath] = getMtime(stats);
-                } else {
-                    delete this.files[filePath];
+                    this.files.push(filePath);
                 }
             } catch (e) {
                 console.log('Malta-browser-refresh [error]:'.red())
@@ -132,54 +133,5 @@ Xwatch.prototype.addFile = function (filePath) {
     }
 };
 
-Xwatch.prototype.check = function (cb) {
-    var res = false,
-        BW = this,
-        _path, _url,
-        updates = {},
-        Irelative = 0,
-        Nrelative = Object.keys(BW.files).length;
-
-    for (_path in BW.files) {
-        (function (p){
-            try {
-                if (fs.existsSync(p)) {
-                    fs.stat(p, function (err, stats) {
-                        if (BW.files[p] < getMtime(stats)) {
-                            updates[p] = getMtime(stats);
-                            console.log('Malta-browser-refresh ['+ ('modified ' + p).white() + ']')
-                            res = true;
-                        }
-                        Irelative++;
-                        innerCheck();
-                    });
-                } else {
-                    Irelative++;
-                    delete BW.files[p];
-                }
-            } catch(e) {
-                console.log('Malta-browser-refresh [error]:'.red())
-                console.log(e);
-            }
-        })(_path);
-    }
-
-    
-    function innerCheck() {
-        /**
-         * only if every file has been checked
-         * invoke the callback passing res
-         */
-        if (Irelative == Nrelative) {
-
-            setTimeout(function () {
-                for (tmp in updates) {
-                    BW.files[tmp] = updates[tmp];
-                }
-                cb(res);
-            }, ttr);
-        }
-    }
-};
 
 module.exports = Xwatch;
