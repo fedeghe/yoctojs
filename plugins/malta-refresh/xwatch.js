@@ -1,7 +1,5 @@
 const WebSocket = require('ws'),
     http = require('http'),
-    https = require('https'),
-    url = require('url'),
     fs = require('fs'),
     ttr = 1000,
     getMtime = function(stat_response) {
@@ -72,9 +70,13 @@ const WebSocket = require('ws'),
                 wss = new WebSocket.Server({port: srvPort});
                 wss.on('connection', function connection(ws) {
                     inter && clearInterval(inter);
-                    inter  = setInterval(() => {
+                    inter = setInterval(() => {
                         inst.check(function (res) {
-                            ws.send(res ? JSON.stringify({reload: true}) : '{}');
+                            wss.clients.forEach(function each(client) {
+                                if (client.readyState === WebSocket.OPEN) {
+                                  client.send(res ? JSON.stringify({reload: true}) : '{}');
+                                }
+                            });
                         });        
                     }, 1000)
                 });
@@ -83,33 +85,14 @@ const WebSocket = require('ws'),
                 });
             }
         }
-    },
-    
-    referers = [                        //
-        'https://www.google.com',       //
-        'http://www.stailamedia.com',   //
-        'http://www.jmvc.org',          //  XHR
-        'http://www.freakstyle.it'      //
-    ],                                  //
-    refererLen = referers.length;       //
+    };
 
-let refererIndex = 0,   // XHR
-    wss = null,         // WS
+let wss = null,         // WS
     inter = null;       // WS
-
-// XHR
-function nextReferer() {
-    refererIndex = (++refererIndex) % refererLen;
-    return referers[refererIndex];
-}
-
 
 function Xwatch(type) {
     this.type = type;
-    this.files = {
-        relative : {},
-        net : {}
-    };
+    this.files = {};
 }
 Xwatch.prototype.start = function () {
     var BW = this;
@@ -130,42 +113,19 @@ Xwatch.prototype.getScript = function () {
     return scripts[this.type];
 }
 
-Xwatch.prototype.addFile = function (type, filePath) {
+Xwatch.prototype.addFile = function (filePath) {
     
     var BW = this,
         stats, parse, lib;
     
-    if (!(filePath in this.files[type])) {
+    if (!(filePath in this.files)) {
         setTimeout(() => {
-            try {
-                switch (type) {
-                    case 'relative':
-                        
-                        if (fs.existsSync(filePath)) {
-
-                            stats = fs.statSync(filePath);
-                            BW.files[type][filePath] = getMtime(stats);
-
-                        } else {
-                            delete BW.files[type][filePath];
-                        }
-                        
-                    break;
-
-                    case 'net' :
-                        parse = url.parse(filePath);
-
-                        lib = parse.protocol == 'https:' ? https : http;
-
-                        lib.request({
-                            method: 'HEAD',
-                            host: parse.host,
-                            port: parse.port || (lib == http ? 80 : 443),
-                            path: parse.pathname
-                        }, function(res) {
-                            BW.files.net[filePath] = +new Date(res.headers['last-modified']);
-                        }).end();
-                    break;
+            try {        
+                if (fs.existsSync(filePath)) {
+                    stats = fs.statSync(filePath);
+                    BW.files[filePath] = getMtime(stats);
+                } else {
+                    delete BW.files[filePath];
                 }
             } catch (e) {
                 console.log('Malta-browser-refresh [error]:'.red())
@@ -179,23 +139,17 @@ Xwatch.prototype.check = function (cb) {
     var res = false,
         BW = this,
         _path, _url,
-        updates = {
-            relative : {},
-            net : {}
-        },
+        updates = {},
         Irelative = 0,
-        Inet = 0,
-        Nrelative = Object.keys(BW.files.relative).length,
-        Nnet = Object.keys(BW.files.net).length;
+        Nrelative = Object.keys(BW.files).length;
 
-    // relatives
-    for (_path in BW.files.relative) {
+    for (_path in BW.files) {
         (function (p){
             try {
                 if (fs.existsSync(p)) {
                     fs.stat(p, function (err, stats) {
-                        if (BW.files.relative[p] < getMtime(stats)) {
-                            updates.relative[p] = getMtime(stats);
+                        if (BW.files[p] < getMtime(stats)) {
+                            updates[p] = getMtime(stats);
                             console.log('Malta-browser-refresh ['+ ('modified ' + p).white() + ']')
                             res = true;
                         }
@@ -204,7 +158,7 @@ Xwatch.prototype.check = function (cb) {
                     });
                 } else {
                     Irelative++;
-                    delete BW.files.relative[p];
+                    delete BW.files[p];
                 }
             } catch(e) {
                 console.log('Malta-browser-refresh [error]:'.red())
@@ -213,57 +167,17 @@ Xwatch.prototype.check = function (cb) {
         })(_path);
     }
 
-    // online
-    for (_url in BW.files.net) {
-        (function (u) {
-            var parse = url.parse(u),
-                lib = u.match(/https:/) ? https : http,
-                req;
-            try {
-                req = lib.request({
-                    method: 'HEAD',
-                    host: parse.host,
-                    port: parse.port || (lib == http ? 80 : 443),
-                    path: parse.pathname,
-                    headers : {'Referer' : nextReferer()}
-                }, function (r) {
-                    var d = +new Date(r.headers['last-modified']);
-                    
-                    if (BW.files.net[u] < d){
-                        updates.net[u] = d;
-                        console.log('Malta-browser-refresh ['+ ('modified ' + u).white() + ']')
-                        res = true; 
-                    }
-                    Inet++;
-                    innerCheck();
-                })
-                req.on('error', function(err) {
-                    console.log('Malta-browser-refresh [error polling ' + u + ']')
-                    console.log('... the file will be ignored'.red());
-                    delete BW.files.net[u];
-                })
-                req.end();
-            } catch(e){
-                console.log('Malta-browser-refresh [error]:'.red())
-                console.log(e);
-            }
-            
-        })(_url);
-    }
     
     function innerCheck() {
         /**
          * only if every file has been checked
          * invoke the callback passing res
          */
-        if (Irelative == Nrelative && Inet ==Nnet) {
+        if (Irelative == Nrelative) {
 
             setTimeout(function () {
-                for (tmp in updates.relative) {
-                    BW.files.relative[tmp] = updates.relative[tmp];
-                }
-                for (tmp in updates.net) {
-                    BW.files.net[tmp] = updates.net[tmp];
+                for (tmp in updates) {
+                    BW.files[tmp] = updates[tmp];
                 }
                 cb(res);
             }, ttr);

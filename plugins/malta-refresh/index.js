@@ -15,9 +15,6 @@ let script = null,
 
 function malta_refresh(obj, options) {
     options = options || {};
-    if (!('files' in options)) {
-		options.files = 'relative';
-    }
     const self = this,
         defaultMode = 'ws',
         mode = options.mode || defaultMode,
@@ -51,16 +48,7 @@ function malta_refresh(obj, options) {
             for (i = 0, l = scripts.length; i < l; i++) {
                 tmp = scripts[i].match(rex.js.inner);
                 if (tmp) {
-                    tmp[1] = tmp[1].replace(/^\/\//, 'http://');
-                    tmp[1] = tmp[1].replace(/^\//, '');
-                    rel = isRelative(tmp[1]);
-
-                    if (rel ? type.match(/relative|\*/) : type.match(/net|\*/)) {
-                        bW.addFile(
-                            rel ? 'relative' : 'net',
-                            rel ? path.resolve(baseFolder, tmp[1]) : tmp[1]
-                        );
-                    }
+                    bW.addFile(path.resolve(baseFolder, tmp[1]));
                 }
             }
         }
@@ -68,16 +56,7 @@ function malta_refresh(obj, options) {
             for (i = 0, l = styles.length; i < l; i++) {
                 tmp = styles[i].match(rex.css.inner);
                 if (tmp) {
-                    tmp[1] = tmp[1].replace(/^\/\//, 'http://');
-                    tmp[1] = tmp[1].replace(/^\//, '');
-
-                    rel = isRelative(tmp[1]);
-                    if (rel ? type.match(/relative|\*/) : type.match(/net|\*/)) {
-                        bW.addFile(
-                            rel ? 'relative' : 'net',
-                            rel ? path.resolve(baseFolder, tmp[1]) : tmp[1]
-                        );
-                    }
+                    bW.addFile(path.resolve(baseFolder, tmp[1]));
                 }
             }
         }
@@ -89,30 +68,14 @@ function malta_refresh(obj, options) {
         self.doErr(err, obj, pluginName);
     }
 	
-	function isRelative(path) {
-		return !(path.match(/^http|\/\//));
-	}    
+	// function isRelative(path) {
+	// 	return !(path.match(/^http|\/\//));
+	// }    
 
     // add the html by default
     //
-	bW.addFile('relative', path.resolve(baseFolder, obj.name));
-	if (options.files == "*") {
-		digForFiles("*");
-	} else if (options.files == "net") {
-		digForFiles("net");
-	} else if (options.files == "relative") {
-		digForFiles("relative");
-	} else {
-		fileNum = options.files.length;
-		for (fileI = 0; fileI < fileNum; fileI++) {
-			
-			tmp = isRelative(options.files[fileI]);
-			bW.addFile(
-				tmp ? 'relative' : 'net',
-				tmp ? path.resolve(baseFolder, options.files[fileI]) : options.files[fileI]
-			);
-		}
-    }
+    bW.addFile(path.resolve(baseFolder, obj.name));
+    digForFiles();
 
 	return (solve, reject) => {
         fs.writeFile(obj.name, obj.content, err => {
