@@ -7,17 +7,6 @@ const WebSocket = require('ws'),
     },
     srvHost = '127.0.0.1',
     srvPort = 2345,
-    isPortTaken = function(port, fn) {
-        var net = require('net'),
-            tester = net.createServer();
-        tester.once('error', function (err) {
-            if (err.code != 'EADDRINUSE') return fn(err)
-            fn(null, true)
-        }).once('listening', function() {
-            tester.once('close', function() { fn(null, false) })
-            .close()
-        }).listen(port)
-    },
     scripts = {
         xhr: `(function () {
     var t = window.setInterval(function () {
@@ -94,11 +83,23 @@ function Xwatch(type) {
     this.type = type;
     this.files = {};
 }
+
 Xwatch.prototype.start = function () {
-    var BW = this;
+    const BW = this,
+        isPortTaken = (port, fn) => {
+            const net = require('net'),
+                tester = net.createServer();
+            tester.once('error',  err => {
+                if (err.code != 'EADDRINUSE') return fn(err);
+                fn(null, true)
+            }).once('listening', () => {
+                tester.once('close', function() { fn(null, false) })
+                .close()
+            }).listen(port)
+        };
 
     (function findUnusedPort() {
-        isPortTaken(srvPort, function(err, taken){
+        isPortTaken(srvPort, (err, taken) => {
             if (taken) {
                 srvPort++;
                 findUnusedPort();
@@ -113,19 +114,15 @@ Xwatch.prototype.getScript = function () {
     return scripts[this.type];
 }
 
-Xwatch.prototype.addFile = function (filePath) {
-    
-    var BW = this,
-        stats, parse, lib;
-    
+Xwatch.prototype.addFile = function (filePath) {    
     if (!(filePath in this.files)) {
         setTimeout(() => {
             try {        
                 if (fs.existsSync(filePath)) {
-                    stats = fs.statSync(filePath);
-                    BW.files[filePath] = getMtime(stats);
+                    const stats = fs.statSync(filePath);
+                    this.files[filePath] = getMtime(stats);
                 } else {
-                    delete BW.files[filePath];
+                    delete this.files[filePath];
                 }
             } catch (e) {
                 console.log('Malta-browser-refresh [error]:'.red())

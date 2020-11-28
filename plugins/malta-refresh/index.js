@@ -24,10 +24,7 @@ function malta_refresh(obj, options) {
     
     !bW && createbWatch(mode);
 
-    let msg,
-		fileNum,
-		tmp,
-        fileI = 0;
+    let msg;
         
     function digForFiles(type) {
         var rex = {
@@ -42,7 +39,7 @@ function malta_refresh(obj, options) {
             },
             scripts = obj.content.match(rex.js.outer),
             styles = obj.content.match(rex.css.outer),
-            i, l, tmp, rel;
+            i, l, tmp;
 
         if (scripts) {
             for (i = 0, l = scripts.length; i < l; i++) {
@@ -66,11 +63,7 @@ function malta_refresh(obj, options) {
         obj.content = obj.content.replace(/\<\/body\>/, '<script>' + script + '</script></body>');
     } catch (err) {
         self.doErr(err, obj, pluginName);
-    }
-	
-	// function isRelative(path) {
-	// 	return !(path.match(/^http|\/\//));
-	// }    
+    } 
 
     // add the html by default
     //
