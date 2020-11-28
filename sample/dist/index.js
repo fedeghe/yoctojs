@@ -1,8 +1,3 @@
-/*
-yoctojs v0.0.1
-Federico Ghedina <fedeghe@gmail.com>
-~7.2KB
-*/
 (function(fn) {
             var root
 	if (typeof exports === "object" && typeof module !== "undefined") {

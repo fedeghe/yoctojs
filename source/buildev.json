@@ -1,7 +1,8 @@
 {
     "EXE": [
         "rm -rf dist",
-        "mkdir dist"
+        "mkdir -p dist"
     ],
-    "source/index.js": "dist -plugins=malta-umd[name:\"Y\"]...malta-header-comment[name:\"source/header.txt\",nostrict:true]"
+    "source/index.js": "dist -plugins=malta-umd[name:\"Y\"]...malta-header-comment[name:\"source/header.txt\",nostrict:true]",
+    "source/sample/require.json": true
 }

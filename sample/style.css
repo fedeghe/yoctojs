@@ -1,0 +1,24 @@
+* {
+  font-family: verdana;
+}
+body {
+  background-color: white;
+  font-size: 1.2em;
+}
+pre {
+  border: 5px solid #223;
+  border-left: 5px solid #0f0;
+  padding: 10px;
+  background-color: #223;
+  color: #0f0;
+  line-height: 1.5em;
+}
+.content {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px dotted black;
+}
+section {
+  border-bottom: 1px solid black;
+  padding: 20px;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>wwww title xxx</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="../dist/index.js"></script>
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <section>
+            <h3>Select, setAttribute</h3>
+            <div class="content" id="one">
+                <span>hello</span>
+                <span>world</span>
+            </div>
+            <pre>
+var t = Y('#one span')
+t.style({
+    color:'red'
+}).setAttrs({
+    title: function (el) {
+        return el.innerHTML
+    }
+})
+            </pre>
+        </section>
+        <section>
+            <h3>Select, context, toggle on click</h3>
+            <div class="content" id="two">
+                <button>toggle</button>
+                <p>might be hidden</p>
+            </div>
+            <pre>
+Y.setContext(Y('#two'));
+var b = Y('button'),
+    p = Y('p');
+b.on('click', function (){
+    p.toggle();
+});
+
+            </pre>
+        </section>
+        <section>
+            <h3>Create an element, once event</h3>
+            <div class="content" id="three"></div>
+            <pre>
+var b = Y('&lt;button\&gt;click&lt;/button&gt;'),
+    p = Y('&lt;p&gt;&lt;/p&gt;');
+Y('#three').append(b)   
+Y('#three').append(p)
+p.html('some content');
+
+b.on('click', function (){
+    p.toggle();
+});
+            </pre>
+        </section>
+    </body>
+</html>
