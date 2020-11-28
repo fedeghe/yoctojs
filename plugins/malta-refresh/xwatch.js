@@ -56,6 +56,7 @@ const WebSocket = require('ws'),
         ws: function start() {
             const inst = this;
             if (!wss) {
+                console.log('created; ', +new Date)
                 wss = new WebSocket.Server({port: srvPort});
                 wss.on('connection', function connection(ws) {
                     inst.setChangeListener(function (res) {
@@ -76,8 +77,8 @@ const WebSocket = require('ws'),
 let wss = null,         // WS
     inter = null;       // WS
 
-function Xwatch(type) {
-    this.type = type;
+function Xwatch(mode) {
+    this.mode = mode;
     this.files = [];
 }
 Xwatch.prototype.setChangeListener = function (cb) {
@@ -107,14 +108,14 @@ Xwatch.prototype.start = function () {
                 srvPort++;
                 findUnusedPort();
             } else {
-                starters[BW.type].call(BW);
+                starters[BW.mode].call(BW);
             }
         })
     })();
 };
 
 Xwatch.prototype.getScript = function () {
-    return scripts[this.type];
+    return scripts[this.mode];
 }
 
 Xwatch.prototype.addFile = function (filePath) {   

@@ -26,7 +26,7 @@ function malta_refresh(obj, options) {
 
     let msg;
         
-    function digForFiles(type) {
+    function digForFiles() {
         var rex = {
                 js : {
                     outer : /<script[^>]*?src=\"([^"]*)\"[^>]*?>[\s\S]*?<\/script>/gi,
@@ -39,23 +39,23 @@ function malta_refresh(obj, options) {
             },
             scripts = obj.content.match(rex.js.outer),
             styles = obj.content.match(rex.css.outer),
-            i, l, tmp;
+            tmp;
 
         if (scripts) {
-            for (i = 0, l = scripts.length; i < l; i++) {
-                tmp = scripts[i].match(rex.js.inner);
+            scripts.forEach(script => {
+                tmp = script.match(rex.js.inner);
                 if (tmp) {
                     bW.addFile(path.resolve(baseFolder, tmp[1]));
                 }
-            }
+            })
         }
         if (styles) {
-            for (i = 0, l = styles.length; i < l; i++) {
-                tmp = styles[i].match(rex.css.inner);
+            styles.forEach(style => {
+                tmp = style.match(rex.css.inner);
                 if (tmp) {
                     bW.addFile(path.resolve(baseFolder, tmp[1]));
                 }
-            }
+            })
         }
     }
     
@@ -68,6 +68,7 @@ function malta_refresh(obj, options) {
     // add the html by default
     //
     bW.addFile(path.resolve(baseFolder, obj.name));
+    
     digForFiles();
 
 	return (solve, reject) => {
