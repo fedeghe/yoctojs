@@ -100,10 +100,10 @@ make-dir@^2.1.0:
     pify "^4.0.1"
     semver "^5.6.0"
 
-malta-browser-refresh@^1.2.12:
-  version "1.2.12"
-  resolved "https://registry.yarnpkg.com/malta-browser-refresh/-/malta-browser-refresh-1.2.12.tgz#82ef9e49569ea3bb6e4f09257daab22f764555a6"
-  integrity sha512-l4YAkyV4ftNgzYsANbKV4TohLEMTkcP2Td8jbkYh3zC5pt+kfjnIy6KbBcdXBAmcJCPDOJ+gv0ND79ViBo59ig==
+malta-browser-refresh@^1.2.14:
+  version "1.2.14"
+  resolved "https://registry.yarnpkg.com/malta-browser-refresh/-/malta-browser-refresh-1.2.14.tgz#874887f672c3171c6b2515a8c7735afe761f7a9c"
+  integrity sha512-eORJLpXczAcrXwmiLNAWWmKuCqRnx2Hg5GkvvQLuBtYfCGg2TarcaJ3i/xHaWGaNpzieY6YHj5BEt/q3CulZ3A==
 
 malta-dev-srv@^1.1.7:
   version "1.1.7"

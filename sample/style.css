@@ -2,14 +2,14 @@
   font-family: verdana;
 }
 body {
-  background-color: white;
+  background-color: #fff;
   font-size: 1.2em;
 }
 pre {
-  border: 5px solid #223;
+  border: 5px solid #020;
   border-left: 5px solid #0f0;
   padding: 10px;
-  background-color: #223;
+  background-color: #020;
   color: #0f0;
   line-height: 1.5em;
 }
