@@ -3,7 +3,7 @@
 }
 body {
   background-color: #fff;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 pre {
   border: 5px solid #020;
@@ -12,6 +12,7 @@ pre {
   background-color: #020;
   color: #0f0;
   line-height: 1.5em;
+  overflow: scroll;
 }
 .content {
   margin: 10px 0;
