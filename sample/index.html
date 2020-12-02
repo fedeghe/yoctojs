@@ -14,6 +14,7 @@
             <div class="content" id="one">
                 <span>hello</span>
                 <span>world</span>
+                <span>foo bar</span>
             </div>
             <pre>
 var t = Y('#one span')
@@ -23,6 +24,8 @@ t.style({
     title: function (el) {
         return el.innerHTML
     }
+}).on('click', function (e, el) {
+    Y(el).html('yeah')
 })
             </pre>
         </section>
@@ -54,6 +57,22 @@ p.html('some content');
 
 b.on('click', function (){
     p.toggle();
+});
+            </pre>
+        </section>
+
+
+        <section>
+            <h3>Extend Yocto</h3>
+            <div class="content" id="four" style="position:relative;height:30px"></div>
+            <pre>
+var b = Y('&lt;button\&gt;click&lt;/button&gt;');
+Y('#four').append(b);
+b.on('click', function () {
+    this.move('right')
+})
+Y.extend(function move(where) {
+    this.style({position:'absolute', [where]: '10px', top: '10px'})
 });
             </pre>
         </section>

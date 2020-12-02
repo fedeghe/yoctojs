@@ -8,7 +8,7 @@ Y(function () {
                 return el.innerHTML
             }
         }).on('click', function (e, el) {
-            alert(el.innerHTML)
+            Y(el).html('yeah')
         })
     })();
 
@@ -29,6 +29,19 @@ Y(function () {
 
         b.on('click', function (){
             p.toggle();
+        });
+    })();
+
+
+
+    (function () {
+        var b = Y('<button>click</button>');
+        Y('#four').append(b);
+        b.on('click', function () {
+            this.move('right')
+        })
+        Y.extend(function move(where) {
+            this.style({position:'absolute', [where]: '10px', top: '10px'})
         });
     })();
 /*
