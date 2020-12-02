@@ -38,11 +38,18 @@ Y(function () {
         var b = Y('<button>click</button>');
         Y('#four').append(b);
         b.on('click', function () {
-            this.move('right')
+            var position = this.style(['left', 'right'])
+            
+            if (position[0].right === '10px') {
+                this.move('left')
+            } else this.move('right')
         })
-        Y.extend(function move(where) {
-            this.style({position:'absolute', [where]: '10px', top: '10px'})
+        Y.extend(function move(where, other) {
+            where === 'right' 
+            ? this.style({position:'absolute', [where]: '10px', left:'', top: '10px'})
+            : this.style({position:'absolute', [where]: '10px', right: '', top: '10px'});
         });
+        
     })();
 /*
     t.get(0).on('click', function () {

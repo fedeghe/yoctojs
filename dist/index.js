@@ -1,7 +1,7 @@
 /*
 yoctojs v0.0.1
 Federico Ghedina <fedeghe@gmail.com>
-~7.23KB
+~7.61KB
 */
 (function(fn) {
             var root
@@ -73,13 +73,25 @@ Federico Ghedina <fedeghe@gmail.com>
 
     Y.prototype = {
         forEach: function (f) {
-            this.els.forEach(function(el) {f.bind(el)()})
+            this.els.forEach(function(el, i) {f.bind(el)(i)})
         },
 
         ready: function (f) {
             document.addEventListener('DOMContentLoaded', f, false);
         },
         style: function (v) {
+            if (isArray(v)) {
+                var ret = []
+                this.forEach(function (i) {
+                    var el = this
+                    
+                    ret[i] = v.reduce(function (acc, val){
+                        acc[val] = el.style[val]
+                        return acc
+                    }, {})
+                })
+                return ret
+            }
             this.forEach(function () {
                 for (var k in v) {
                     this.style[k] = v[k];
