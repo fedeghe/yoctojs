@@ -37,9 +37,9 @@ Y(function () {
     (function () {
         var b = Y('<button>click</button>');
         Y('#four').append(b);
-        b.on('click', function () {
-             // use b or Y(this)
-            var position = b.style(['left', 'right'])
+        b.on('click', function (e, el) {
+             // use b || Y(this) || Y(el)
+            var position = b.style(['right'])
             b.move(position[0].right === '10px' ? 'left' : 'right');
         })
         Y.extend(function move(where) {
