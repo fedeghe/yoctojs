@@ -68,7 +68,9 @@
 
     Y.prototype = {
         forEach: function (f) {
-            this.els.forEach(function(el, i) {f.bind(el)(i)})
+            this.els.forEach(function(el, i) {
+                f.bind(el)(i)
+            })
         },
 
         ready: function (f) {
@@ -79,7 +81,6 @@
                 var ret = []
                 this.forEach(function (i) {
                     var el = this
-                    
                     ret[i] = v.reduce(function (acc, val){
                         acc[val] = el.style[val]
                         return acc
@@ -124,9 +125,9 @@
         on: function (eventType, fn) {
             var $ = this
             this.forEach(function () {
-                var el = this;
+                // var el = this;
                 this.addEventListener(eventType, function (e){
-                    return fn.bind(el)(e, el);
+                    return fn.bind($)(e, $);
                 }, false);
             });
             return this
