@@ -1,6 +1,264 @@
 /*
 yoctojs v0.0.3
 Federico Ghedina <fedeghe@gmail.com>
-~3.42KB
+~7.66KB
 */
-!function(t){var n;"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):(n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,n.Y=t.call(n))}(function(){function t(t){return[].slice.call(t)}function n(t){if(Array.isArray&&Array.isArray(t))return!0;var n=String(t)!==t,e={}.toString.call(t).match(/\[object\sArray\]/);return n&&!(!e||!e.length)}function e(t){return"object"==typeof HTMLElement?t instanceof HTMLElement:t&&"object"==typeof t&&void 0!==t.nodeType&&1===t.nodeType&&"string"==typeof t.nodeName}function i(t){return new r(t)}var r=function(i){this.els=[];var r=typeof i;if("function"===r)this.ready(i);else if("string"===r)if(i.match(/^\</)){var o=document.createElement("div");o.innerHTML=i,this.els=[].slice.call(o.children)}else this.els=t(document.querySelectorAll(i));else e(i)?this.els=[i]:n(i)&&(this.els=i)};return r.prototype={forEach:function(t){this.els.forEach(function(n,e){t.bind(n)(e)})},ready:function(t){document.addEventListener("DOMContentLoaded",t,!1)},style:function(t){if(n(t)){var e=[];return this.forEach(function(n){var i=this;e[n]=t.reduce(function(t,n){return t[n]=i.style[n],t},{})}),e}return this.forEach(function(){for(var n in t)this.style[n]=t[n]}),this},setAttrs:function(t){return this.forEach(function(){for(var n in t)this.setAttribute(n,"function"==typeof t[n]?t[n](this):t[n])}),this},getAttrs:function(){var n=t(arguments);return this.els.map(function(t){return n.reduce(function(n,e){return n[e]=t.getAttribute(e),n},{})})},removeAttrs:function(){var n=t(arguments);return this.forEach(function(){var t=this;n.forEach(function(n){t.removeAttribute(n)})}),this},on:function(t,n){var e=this;return this.forEach(function(){this.addEventListener(t,function(t){return n.bind(e)(t,e)},!1)}),this},off:function(t,n){return this.forEach(function(){this.removeEventListener(t,n,!1)}),this},once:function(t,n){return this.forEach(function(){var e=this;this.addEventListener(t,function i(r){n(r),e.removeEventListener(t,i,!1)},!1)}),this},parent:function(){return this.els.map(function(t){return t.parentNode})},get:function(t){return t<this.els.length?new r(this.els[t]):null},addClass:function(){var n=t(arguments);return this.forEach(function(){var t=this,e=t.className.split(/\s/);n.forEach(function(t){e.indexOf(t)<0&&e.push(t)}),t.className=e.join(" ")}),this},removeClass:function(){var n=t(arguments);return this.forEach(function(){var t=this,e=t.className.split(/\s/);n.forEach(function(t){var n=e.indexOf(t);n>=0&&e.splice(n,1)}),t.className=e.join(" ")}),this},replaceClass:function(t,n){return this.forEach(function(){var e=this,i=e.className.split(/\s/),r=i.indexOf(t);r>=0&&(i.splice(r,1),i.push(n),e.className=i.join(" "))}),this},html:function(t){return void 0===t?this.els.map(function(t){return t.innerHTML}):(this.forEach(function(){this.innerHTML=t}),this)},show:function(){return this.forEach(function(){this.style.display="none"}),this},hide:function(){return this.forEach(function(){this.style.display=""}),this},toggle:function(){return this.forEach(function(){this.style.display="none"===this.style.display?"":"none"}),this},append:function(t){return this.forEach(function(){var n=this;t.forEach(function(){n.appendChild(this)})}),this}},i.extend=function(n){n.name in r.prototype||(r.prototype[n.name]=function(){n.apply(this,t(arguments))})},i});
+(function(fn) {
+            var root
+	if (typeof exports === "object" && typeof module !== "undefined") {
+		module.exports = fn();
+	} else if (typeof define === "function" && define.amd) {
+		define([], fn);
+	} else {
+		if (typeof window !== "undefined") {
+			root = window;
+		} else if (typeof global !== "undefined") {
+			root = global;
+		} else if (typeof self !== "undefined") {
+			root = self;
+		} else {
+			root = this;
+		}
+		root.Y = fn.call(root);
+	}
+})(function _() {
+    function toArr(args) {
+        return [].slice.call(args)
+    }
+    function isArray(o) {
+        if (Array.isArray && Array.isArray(o)) {
+            return true;
+        }
+        var t1 = String(o) !== o,
+            t2 = ({}).toString.call(o).match(/\[object\sArray\]/);
+        return t1 && !!(t2 && t2.length);
+    }
+    function isElement(o) {
+        return (
+            typeof HTMLElement === 'object'
+                ? o instanceof HTMLElement
+                : o && typeof o === 'object' && // DOM2
+                    typeof o.nodeType !== 'undefined' && o.nodeType === 1 &&
+                    typeof o.nodeName === 'string'
+        );
+    }
+
+    var Y = function (s) {
+        this.els = [];
+        var type = typeof s
+        
+
+        // if a function then let's treat that as a ready
+        //
+        if (type === 'function') {
+            this.ready(s);
+
+        // if it's a string could be 
+        // 1) selector
+        // 2) tag to be created
+        } else if ( type === 'string') {
+            if (s.match(/^\</)) {
+                var tmp = document.createElement('div');
+                tmp.innerHTML = s;
+                this.els = [].slice.call(tmp.children);
+            } else {
+                this.els = toArr(document.querySelectorAll(s));
+            }
+        } else if (isElement(s)) {
+            this.els = [s];
+        } else if (isArray(s)) {
+            this.els = s;
+        }
+    };
+
+    Y.prototype = {
+        forEach: function (f) {
+            this.els.forEach(function(el, i) {
+                f.bind(el)(i)
+            })
+        },
+
+        ready: function (f) {
+            document.addEventListener('DOMContentLoaded', f, false);
+        },
+        style: function (v) {
+            if (isArray(v)) {
+                var ret = []
+                this.forEach(function (i) {
+                    var el = this
+                    ret[i] = v.reduce(function (acc, val){
+                        acc[val] = el.style[val]
+                        return acc
+                    }, {})
+                })
+                return ret
+            }
+            this.forEach(function () {
+                for (var k in v) {
+                    this.style[k] = v[k];
+                }
+            });
+            return this
+        },
+        setAttrs: function (a) {
+            this.forEach(function () {
+                for (var n in a) {
+                    this.setAttribute(n, typeof a[n] === 'function' ? a[n](this) : a[n]);
+                }
+            });
+            return this;
+        },
+        getAttrs: function () {
+            var a = toArr(arguments);
+            return this.els.map(function (el){
+                return a.reduce(function (acc, attr) {
+                    acc[attr] = el.getAttribute(attr);
+                    return acc;
+                }, {})
+            });
+        },
+        removeAttrs: function () {
+            var a = toArr(arguments);
+            this.forEach(function () {
+                var self = this;
+                a.forEach(function (attr) {
+                    self.removeAttribute(attr);
+                });
+            });
+            return this;
+        },
+        on: function (eventType, fn) {
+            var $ = this
+            this.forEach(function () {
+                var el = this;
+                this.addEventListener(eventType, function (e){
+                    return fn.bind(el)(e, el);
+                }, false);
+            });
+            return this
+        },
+        off: function (type, fn) {
+            this.forEach(function () {
+                this.removeEventListener(type, fn, false);
+            });
+            return this;
+        },
+        once: function (eventType, fn) {
+            this.forEach(function () {
+                var $ = this;
+                this.addEventListener(eventType, function h(e) {
+                    fn(e);
+                    $.removeEventListener(eventType, h, false);
+                }, false);
+            });
+            return this;
+        },
+        parent: function () {
+            return this.els.map(function (el) {
+                return el.parentNode;
+            })
+        },
+        get: function(n) {
+            return n < this.els.length ? new Y(this.els[n]) : null;
+        },
+        addClass: function () {
+            var adds = toArr(arguments);
+            this.forEach(function () {
+                var $ = this,
+                    cls = $.className.split(/\s/);
+                adds.forEach(function (add) {
+                    if (cls.indexOf(add) < 0) {
+                        cls.push(add);
+                    }
+                });
+                $.className = cls.join(' ');
+            });
+            return this;
+        },
+        removeClass: function () {
+            var rms = toArr(arguments);
+            this.forEach(function () {
+                var $ = this,
+                    cls = $.className.split(/\s/);
+                rms.forEach(function (rm) {
+                    var index = cls.indexOf(rm);
+                    if (index >= 0) {
+                        cls.splice(index, 1);
+                    }
+                });
+                $.className = cls.join(' ');
+            });
+            return this;
+        },
+        replaceClass: function (outClass, inClass) {
+            this.forEach(function () {
+                var $ = this,
+                    cls = $.className.split(/\s/),
+                    index = cls.indexOf(outClass);
+                if (index >= 0) {
+                    cls.splice(index, 1);
+                    cls.push(inClass)
+                    $.className = cls.join(' ')
+                }
+            });
+            return this;
+        },
+        html : function (h) {
+            if (typeof h === 'undefined') {
+                return this.els.map(function (el) {
+                    return el.innerHTML
+                })
+            }
+            this.forEach(function () {
+                this.innerHTML = h
+            })
+            return this
+        },
+        show : function () {
+            this.forEach(function () {
+                this.style.display = 'none';
+            });
+            return this;
+        },
+        hide : function () {
+            this.forEach(function () {
+                this.style.display = '';
+            });
+            return this;
+        },
+        toggle : function () {
+            this.forEach(function () {
+                this.style.display = this.style.display === 'none' ? '' : 'none'
+            })
+            return this;
+        },
+        append: function (what) {
+            this.forEach(function () {
+                var p = this;
+                what.forEach(function () {
+                    p.appendChild(this)
+                })
+            })
+            return this;
+        },
+        // wrap: function (what) {
+        //     this.forEach(function () {
+        //         var p = this.parentNode;
+        //         what.
+        //     })
+        //     return this;
+        // }
+    };
+    function factory(sel) {
+        return new Y(sel);
+    };
+
+    factory.extend = function (f) {
+        if (!(f.name in Y.prototype))
+            Y.prototype[f.name] = function () {
+                f.apply(this, toArr(arguments));
+            };
+    };
+    return factory
+}
+);

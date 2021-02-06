@@ -125,9 +125,9 @@
         on: function (eventType, fn) {
             var $ = this
             this.forEach(function () {
-                // var el = this;
+                var el = this;
                 this.addEventListener(eventType, function (e){
-                    return fn.bind($)(e, $);
+                    return fn.bind(el)(e, el);
                 }, false);
             });
             return this
