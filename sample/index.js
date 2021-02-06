@@ -38,10 +38,11 @@ Y(function () {
         var b = Y('<button>click</button>');
         Y('#four').append(b);
         b.on('click', function () {
-            var position = this.style(['left', 'right'])
-            this.move(position[0].right === '10px' ? 'left' : 'right');
+             // use b or Y(this)
+            var position = b.style(['left', 'right'])
+            b.move(position[0].right === '10px' ? 'left' : 'right');
         })
-        Y.extend(function move(where, other) {
+        Y.extend(function move(where) {
             where === 'right' 
             ? this.style({position:'absolute', [where]: '10px', left:'', top: '10px'})
             : this.style({position:'absolute', [where]: '10px', right: '', top: '10px'});
