@@ -38,9 +38,8 @@ Y(function () {
         var b = Y('<button>click</button>');
         Y('#four').append(b);
         b.on('click', function () {
-            var self = Y(this),
-                position = self.style(['left', 'right'])
-            self.move(position[0].right === '10px' ? 'left' : 'right');
+            var position = this.style(['left', 'right'])
+            this.move(position[0].right === '10px' ? 'left' : 'right');
         })
         Y.extend(function move(where, other) {
             where === 'right' 
