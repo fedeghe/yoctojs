@@ -8,7 +8,7 @@ Y(function () {
                 return el.innerHTML
             }
         }).on('click', function (e, el) {
-            Y(el).html('yeah')
+            this.html('yeah')
         })
     })();
 
@@ -42,7 +42,6 @@ Y(function () {
             this.move(position[0].right === '10px' ? 'left' : 'right');
         })
         Y.extend(function move(where, other) {
-            
             where === 'right' 
             ? this.style({position:'absolute', [where]: '10px', left:'', top: '10px'})
             : this.style({position:'absolute', [where]: '10px', right: '', top: '10px'});
