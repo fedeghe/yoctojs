@@ -1,7 +1,7 @@
 /*
 yoctojs v0.0.1
 Federico Ghedina <fedeghe@gmail.com>
-~7.61KB
+~7.65KB
 */
 (function(fn) {
             var root
@@ -129,8 +129,9 @@ Federico Ghedina <fedeghe@gmail.com>
         on: function (eventType, fn) {
             var $ = this
             this.forEach(function () {
+                var el = this;
                 this.addEventListener(eventType, function (e){
-                    return fn.bind($)(e);
+                    return fn.bind(el)(e, el);
                 }, false);
             });
             return this

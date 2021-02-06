@@ -27,7 +27,7 @@ t.style({
 }).on('click', function (e, el) {
     Y(el).html('yeah')
 })
-            </pre>
+</pre>
         </section>
         <section>
             <h3>Select, context, toggle on click</h3>
@@ -42,11 +42,10 @@ var b = Y('button'),
 b.on('click', function (){
     p.toggle();
 });
-
-            </pre>
+</pre>
         </section>
         <section>
-            <h3>Create an element, once event</h3>
+            <h3>Create an element, toggle visibility</h3>
             <div class="content" id="three"></div>
             <pre>
 var b = Y('&lt;button\&gt;click&lt;/button&gt;'),
@@ -58,7 +57,7 @@ p.html('some content');
 b.on('click', function (){
     p.toggle();
 });
-            </pre>
+</pre>
         </section>
 
 
@@ -77,7 +76,7 @@ Y.extend(function move(where, other) {
     ? this.style({position:'absolute', [where]: '10px', left:'', top: '10px'})
     : this.style({position:'absolute', [where]: '10px', right: '', top: '10px'});
 });
-            </pre>
+</pre>
         </section>
     <script>(function () {
     var socket = new WebSocket('ws://127.0.0.1:2345');
