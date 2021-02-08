@@ -21,7 +21,18 @@ Y is the main function to be used as selector / constructor
 var b = Y('body p') // get all paragraphs in the body (wrapped in Y)
 var myNode = Y('<span>New paragraph</span>') // creates a span tag (also wrapped in Y)
 ```
+or combine them adding an event handler and some styles
 
+``` js
+var s = Y('<span>Hello world</span>')
+s.style({
+    color:'red',
+    'font-family': 'verdana'
+}).on('click', function () {
+    Y(this).style({color: 'green'})
+});
+Y('body').append(s)
+```
 
 ---
 ###### Better documentation will come asap, btw this is just an experiment ;)
