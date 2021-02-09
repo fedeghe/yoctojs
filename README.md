@@ -18,20 +18,20 @@ tune the code in the example (or the core) to see it live.
 
 Y is the main function to be used as selector / constructor
 ``` js
-var b = Y('body p') // get all paragraphs in the body (wrapped in Y)
-var myNode = Y('<span>New paragraph</span>') // creates a span tag (also wrapped in Y)
+var b = Y('body p'); // get all paragraphs in the body (wrapped in Y)
+var myNode = Y('<span>New paragraph</span>'); // creates a span tag (also wrapped in Y)
 ```
 or combine them adding an event handler and some styles
 
 ``` js
-var s = Y('<span>Hello world</span>')
+var s = Y('<span>Hello world</span>');
 s.style({
     color:'red',
     'font-family': 'verdana'
 }).on('click', function () {
-    Y(this).style({color: 'green'})
+    Y(this).style({color: 'green'});
 });
-Y('body').append(s)
+Y('body').append(s);
 ```
 
 ---
