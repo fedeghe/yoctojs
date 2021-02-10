@@ -16,10 +16,11 @@ tune the code in the example (or the core) to see it live.
 
 ### function Y
 
-Y is the main function to be used as selector / constructor
+Y is the main function to be used as starter/ selector / constructor
 ``` js
-var b = Y('body p'); // get all paragraphs in the body (wrapped in Y)
-var myNode = Y('<span>New paragraph</span>'); // creates a span tag (also wrapped in Y)
+var b = Y('body p');                            // get all paragraphs in the body (wrapped in Y)
+var myNode = Y('<span>New paragraph</span>');   // creates a span tag (wrapped in Y)
+Y(function () { console.log('ready'); });       // dom ready
 ```
 or combine them adding an event handler and some styles
 
