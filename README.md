@@ -31,6 +31,8 @@ s.style({
     'font-family': 'verdana'
 }).on('click', function () {
     Y(this).style({color: 'green'});
+}).once('click', function () {
+    console.log('just once');
 });
 Y('body').append(s);
 ```
