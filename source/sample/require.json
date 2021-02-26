@@ -5,6 +5,6 @@
     ],
     "source/sample/index.js": "sample",
     "source/sample/*.less": "sample -plugins=malta-less",
-    "source/index.js": "sample/dist -plugins=malta-umd[name:\"Y\"]",
-    "source/sample/index.html": "sample -plugins=malta-dev-srv[folder:'sample']...malta-browser-refresh"
+    "source/index.js": "sample/dist -plugins=malta-umd[name:\"Y\"]"
+    ,"source/sample/index.html": "sample -plugins=malta-dev-srv[folder:\"sample\"]...malta-browser-refresh"
 }
