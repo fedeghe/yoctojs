@@ -48,30 +48,5 @@ Y(function () {
             : this.style({position:'absolute', [where]: '10px', right: '', top: '10px'});
         });
     })();
-/*
-    t.get(0).on('click', function () {
-        p.toggle()
-    })
-    t.once('click', function () {
-        console.log(this)
-    })
 
-    
-
-    var e = t.get(0)
-    var p = Y('p')
-    p.removeAttrs( 'title').once('click', function _(e) {
-        console.log(e)
-    })
-    var u = Y('<span class="ciccio">hello there</span>') 
-    u.addClass('a', 'b', 'c', 'foofoo')
-    u.removeClass('b', 'c', 'foo')
-    u.replaceClass('foofoo', 'bar')
-    Y.extend(function al(name){
-        console.log(name, this.get(0).html())
-    })
-    u.al('miiii')
-    e.al('miiii')
-    p.append(Y('<strong>XXX</strong>').style({color:'green'}))
-*/
 })
