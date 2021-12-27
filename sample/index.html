@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Yocto 0.0.4</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="./dist/index.js"></script>
-        <script src="index.js"></script>
-    </head>
-    <body>
-        <section>
-            <h3>Select, setAttribute</h3>
-            <div class="content" id="one">
-                <span>hello</span>
-                <span>world</span>
-                <span>foo bar</span>
-            </div>
-            <pre>
+
+<head>
+    <title>Yocto 0.0.5</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="./dist/index.js"></script>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <section>
+        <h3>Select, setAttribute</h3>
+        <div class="content" id="one">
+            <span>hello</span>
+            <span>world</span>
+            <span>foo</span>
+            <span>bar</span>
+        </div>
+        <pre>
 var t = Y('#one span')
 t.style({
     color:'red'
@@ -25,17 +28,17 @@ t.style({
         return el.innerHTML
     }
 }).on('click', function (e, el) {
-    Y(el).html('yeah')
+    Y(el).style({color:'green'}).html('yeah')
 })
             </pre>
-        </section>
-        <section>
-            <h3>Select, context, toggle on click</h3>
-            <div class="content" id="two">
-                <button>toggle</button>
-                <p>might be hidden</p>
-            </div>
-            <pre>
+    </section>
+    <section>
+        <h3>Select, context, toggle on click</h3>
+        <div class="content" id="two">
+            <button>toggle</button>
+            <p>might be hidden</p>
+        </div>
+        <pre>
 Y.setContext(Y('#two'));
 var b = Y('button'),
     p = Y('p');
@@ -44,11 +47,11 @@ b.on('click', function (){
 });
 
             </pre>
-        </section>
-        <section>
-            <h3>Create an element, once event</h3>
-            <div class="content" id="three"></div>
-            <pre>
+    </section>
+    <section>
+        <h3>Create an element, once event</h3>
+        <div class="content" id="three"></div>
+        <pre>
 var b = Y('&lt;button\&gt;click&lt;/button&gt;'),
     p = Y('&lt;p&gt;&lt;/p&gt;');
 Y('#three').append(b)   
@@ -59,13 +62,13 @@ b.on('click', function (){
     p.toggle();
 });
             </pre>
-        </section>
+    </section>
 
 
-        <section>
-            <h3>Extend Yocto</h3>
-            <div class="content" id="four" style="position:relative;height:30px"></div>
-            <pre>
+    <section>
+        <h3>Extend Yocto</h3>
+        <div class="content" id="four" style="position:relative;height:30px"></div>
+        <pre>
 var b = Y('&lt;button\&gt;click&lt;/button&gt;');
 Y('#four').append(b);
 b.on('click', function () {
@@ -78,8 +81,8 @@ Y.extend(function move(where, other) {
     : this.style({position:'absolute', [where]: '10px', right: '', top: '10px'});
 });
             </pre>
-        </section>
-    <script>(function () {
+    </section>
+<script>(function () {
     var socket = new WebSocket('ws://127.0.0.1:2345');
 
     socket.addEventListener('message', function (event) {
@@ -95,4 +98,5 @@ Y.extend(function move(where, other) {
         socket.close();
     };
 })()</script></body>
+
 </html>

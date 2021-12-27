@@ -113,10 +113,10 @@ make-dir@^2.1.0:
     pify "^4.0.1"
     semver "^5.6.0"
 
-malta-browser-refresh@^1.2.14:
-  version "1.2.15"
-  resolved "https://registry.yarnpkg.com/malta-browser-refresh/-/malta-browser-refresh-1.2.15.tgz#f809276855ab978b480098204b6b4d04983021bb"
-  integrity sha512-5ZwuPRhnTm5lQ8Sa5If90ls02TARHLWz3U8T3PE0iMdeFlH/N2105lw05H3aNY4FfYO3jChOj+R3BVKxe+orxA==
+malta-browser-refresh@^1.2.16:
+  version "1.2.16"
+  resolved "https://registry.yarnpkg.com/malta-browser-refresh/-/malta-browser-refresh-1.2.16.tgz#9c238553f4b14acb333ae6bca9e387eebe1f9a9a"
+  integrity sha512-GSS15mWRX/lYpE+y8rEyt4xeKgfhZPD2K3px/VpNRdwZpmYi+BHIyxoMtd/rDiN9X8HxJxEXUHDHqJDIzU87jQ==
   dependencies:
     ws "^7.4.2"
 
@@ -154,10 +154,10 @@ malta-umd@^1.0.12:
   resolved "https://registry.yarnpkg.com/malta-umd/-/malta-umd-1.0.12.tgz#15817850db1b4e3f9371bb11ea54a376d9c85e5f"
   integrity sha512-odcPGHTj4rMRhSVdNnm8bsdITQ6yf1hO+vXXDi4nLo39TJ95XAoQoCFnAPsQQjOx3tiUS66YujXxG/RKJ2xAQw==
 
-malta@^4.1.27:
-  version "4.1.28"
-  resolved "https://registry.yarnpkg.com/malta/-/malta-4.1.28.tgz#8256257d107bf482184b3d1aa5298c84764b9497"
-  integrity sha512-WS2KL+KTPZxjipARQ6tgMJKuO4LPFNzZjJd9s5Ga9GJ6EEvVVZIZcyZf5WNIe8ammSMcxwSPwut2ywpki66bvQ==
+malta@^4.1.34:
+  version "4.1.34"
+  resolved "https://registry.yarnpkg.com/malta/-/malta-4.1.34.tgz#78c28524dbf767344a6d9de0bfb932da299d7834"
+  integrity sha512-VtwE6JYKudZSv8FkDk2NFZ9TnAqHeflmZYNWFD2DHun/eOm9+QqjM12GRn0WERma+7SyNJCcp/aD4ZBIeLHgCg==
 
 mime@^1.4.1:
   version "1.6.0"

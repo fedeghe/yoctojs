@@ -22,9 +22,8 @@ function _() {
 
     var Y = function (s) {
         this.els = [];
-        var type = typeof s
+        var type = typeof s;
         
-
         // if a function then let's treat that as a ready
         //
         if (type === 'function') {

@@ -8,7 +8,7 @@ Y(function () {
                 return el.innerHTML
             }
         }).on('click', function (e, el) {
-            Y(el).html('yeah')
+            Y(el).style({color:'green'}).html('yeah')
         })
     })();
 
