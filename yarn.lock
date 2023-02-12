@@ -120,10 +120,10 @@ malta-browser-refresh@^1.2.16:
   dependencies:
     ws "^7.4.2"
 
-malta-dev-srv@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/malta-dev-srv/-/malta-dev-srv-1.1.7.tgz#eb2220cc0813acb7454df09646853f5556ef5e22"
-  integrity sha512-piqBphgHdIzndyBP1H45GeGlRMhx5T4v7chGjF+UgtWU+e1qYDm5SBX9osBWnsPTLYc8lSOe1b2ljJmpgrYuWw==
+malta-dev-srv@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/malta-dev-srv/-/malta-dev-srv-1.1.8.tgz#61d833a12e351510bab5511f624fbb4703aca02e"
+  integrity sha512-6/mJuQKcsFrxFJFyNCINrzXzvdteBe4JYX4tWuVVr1Jjx8GNdQyRwAaP3qXMF8Fx719iQERj64lHZETH+k++JQ==
 
 malta-header-comment@^1.0.12:
   version "1.0.12"
@@ -154,10 +154,10 @@ malta-umd@^1.0.12:
   resolved "https://registry.yarnpkg.com/malta-umd/-/malta-umd-1.0.12.tgz#15817850db1b4e3f9371bb11ea54a376d9c85e5f"
   integrity sha512-odcPGHTj4rMRhSVdNnm8bsdITQ6yf1hO+vXXDi4nLo39TJ95XAoQoCFnAPsQQjOx3tiUS66YujXxG/RKJ2xAQw==
 
-malta@^4.1.34:
-  version "4.1.34"
-  resolved "https://registry.yarnpkg.com/malta/-/malta-4.1.34.tgz#78c28524dbf767344a6d9de0bfb932da299d7834"
-  integrity sha512-VtwE6JYKudZSv8FkDk2NFZ9TnAqHeflmZYNWFD2DHun/eOm9+QqjM12GRn0WERma+7SyNJCcp/aD4ZBIeLHgCg==
+malta@^4.1.35:
+  version "4.1.35"
+  resolved "https://registry.yarnpkg.com/malta/-/malta-4.1.35.tgz#907cf08ca8970f45dd6410605dd828e1d8a8baa9"
+  integrity sha512-RlzKWVeNyEIp0T4gsI58MmxaDz4y5DHxJOKKjUjBQRstL65+OJUiLT2JR32y7ObzC7fnWRS/TrkCAqgjnhaiSg==
 
 mime@^1.4.1:
   version "1.6.0"
