@@ -47,184 +47,183 @@ function _() {
         }
     };
 
-    Y.prototype = {
-        forEach: function (f) {
-            this.els.forEach(function(el, i) {
-                f.bind(el)(i)
-            })
-        },
+    Y.prototype.forEach = function (f) {
+        this.els.forEach(function(el, i) {
+            f.bind(el)(i)
+        })
+    };
 
-        ready: function (f) {
-            document.addEventListener('DOMContentLoaded', f, false);
-        },
-        style: function (v) {
-            if (isArray(v)) {
-                var ret = []
-                this.forEach(function (i) {
-                    var el = this
-                    ret[i] = v.reduce(function (acc, val){
-                        acc[val] = el.style[val]
-                        return acc
-                    }, {})
-                })
-                return ret
-            }
-            this.forEach(function () {
-                for (var k in v) {
-                    this.style[k] = v[k];
-                }
-            });
-            return this
-        },
-        setAttrs: function (a) {
-            this.forEach(function () {
-                for (var n in a) {
-                    this.setAttribute(n, typeof a[n] === 'function' ? a[n](this) : a[n]);
-                }
-            });
-            return this;
-        },
-        getAttrs: function () {
-            var a = toArr(arguments);
-            return this.els.map(function (el){
-                return a.reduce(function (acc, attr) {
-                    acc[attr] = el.getAttribute(attr);
-                    return acc;
+    Y.prototype.ready = function (f) {
+        document.addEventListener('DOMContentLoaded', f, false);
+    };
+    Y.prototype.style = function (v) {
+        if (isArray(v)) {
+            var ret = []
+            this.forEach(function (i) {
+                var el = this
+                ret[i] = v.reduce(function (acc, val){
+                    acc[val] = el.style[val]
+                    return acc
                 }, {})
-            });
-        },
-        removeAttrs: function () {
-            var a = toArr(arguments);
-            this.forEach(function () {
-                var self = this;
-                a.forEach(function (attr) {
-                    self.removeAttribute(attr);
-                });
-            });
-            return this;
-        },
-        on: function (eventType, fn) {
-            var $ = this
-            this.forEach(function () {
-                var el = this;
-                this.addEventListener(eventType, function (e){
-                    return fn.bind(el)(e, el);
-                }, false);
-            });
-            return this
-        },
-        off: function (type, fn) {
-            this.forEach(function () {
-                this.removeEventListener(type, fn, false);
-            });
-            return this;
-        },
-        once: function (eventType, fn) {
-            this.forEach(function () {
-                var $ = this;
-                this.addEventListener(eventType, function h(e) {
-                    fn(e);
-                    $.removeEventListener(eventType, h, false);
-                }, false);
-            });
-            return this;
-        },
-        parent: function () {
-            return this.els.map(function (el) {
-                return el.parentNode;
             })
-        },
-        get: function(n) {
-            return n < this.els.length ? new Y(this.els[n]) : null;
-        },
-        addClass: function () {
-            var adds = toArr(arguments);
-            this.forEach(function () {
-                var $ = this,
-                    cls = $.className.split(/\s/);
-                adds.forEach(function (add) {
-                    if (cls.indexOf(add) < 0) {
-                        cls.push(add);
-                    }
-                });
-                $.className = cls.join(' ');
+            return ret
+        }
+        this.forEach(function () {
+            for (var k in v) {
+                this.style[k] = v[k];
+            }
+        });
+        return this
+    };
+    Y.prototype.setAttrs = function (a) {
+        this.forEach(function () {
+            for (var n in a) {
+                this.setAttribute(n, typeof a[n] === 'function' ? a[n](this) : a[n]);
+            }
+        });
+        return this;
+    };
+    Y.prototype.getAttrs = function () {
+        var a = toArr(arguments);
+        return this.els.map(function (el){
+            return a.reduce(function (acc, attr) {
+                acc[attr] = el.getAttribute(attr);
+                return acc;
+            }, {})
+        });
+    };
+    Y.prototype.removeAttrs = function () {
+        var a = toArr(arguments);
+        this.forEach(function () {
+            var self = this;
+            a.forEach(function (attr) {
+                self.removeAttribute(attr);
             });
-            return this;
-        },
-        removeClass: function () {
-            var rms = toArr(arguments);
-            this.forEach(function () {
-                var $ = this,
-                    cls = $.className.split(/\s/);
-                rms.forEach(function (rm) {
-                    var index = cls.indexOf(rm);
-                    if (index >= 0) {
-                        cls.splice(index, 1);
-                    }
-                });
-                $.className = cls.join(' ');
+        });
+        return this;
+    };
+    Y.prototype.on = function (eventType, fn) {
+        var $ = this
+        this.forEach(function () {
+            var el = this;
+            this.addEventListener(eventType, function (e){
+                return fn.bind(el)(e, el);
+            }, false);
+        });
+        return this
+    };
+    Y.prototype.off = function (type, fn) {
+        this.forEach(function () {
+            this.removeEventListener(type, fn, false);
+        });
+        return this;
+    };
+    Y.prototype.once = function (eventType, fn) {
+        this.forEach(function () {
+            var $ = this;
+            this.addEventListener(eventType, function h(e) {
+                fn(e);
+                $.removeEventListener(eventType, h, false);
+            }, false);
+        });
+        return this;
+    };
+    Y.prototype.parent = function () {
+        return this.els.map(function (el) {
+            return el.parentNode;
+        })
+    };
+    Y.prototype.get = function(n) {
+        return n < this.els.length ? new Y(this.els[n]) : null;
+    };
+    Y.prototype.addClass = function () {
+        var adds = toArr(arguments);
+        this.forEach(function () {
+            var $ = this,
+                cls = $.className.split(/\s/);
+            adds.forEach(function (add) {
+                if (cls.indexOf(add) < 0) {
+                    cls.push(add);
+                }
             });
-            return this;
-        },
-        replaceClass: function (outClass, inClass) {
-            this.forEach(function () {
-                var $ = this,
-                    cls = $.className.split(/\s/),
-                    index = cls.indexOf(outClass);
+            $.className = cls.join(' ');
+        });
+        return this;
+    };
+    Y.prototype.removeClass = function () {
+        var rms = toArr(arguments);
+        this.forEach(function () {
+            var $ = this,
+                cls = $.className.split(/\s/);
+            rms.forEach(function (rm) {
+                var index = cls.indexOf(rm);
                 if (index >= 0) {
                     cls.splice(index, 1);
-                    cls.push(inClass)
-                    $.className = cls.join(' ')
                 }
             });
-            return this;
-        },
-        html : function (h) {
-            if (typeof h === 'undefined') {
-                return this.els.map(function (el) {
-                    return el.innerHTML
-                })
-            }
-            this.forEach(function () {
-                this.innerHTML = h
-            })
-            return this
-        },
-        show : function () {
-            this.forEach(function () {
-                this.style.display = 'none';
-            });
-            return this;
-        },
-        hide : function () {
-            this.forEach(function () {
-                this.style.display = '';
-            });
-            return this;
-        },
-        toggle : function () {
-            this.forEach(function () {
-                this.style.display = this.style.display === 'none' ? '' : 'none'
-            })
-            return this;
-        },
-        append: function (what) {
-            this.forEach(function () {
-                var p = this;
-                what.forEach(function () {
-                    p.appendChild(this)
-                })
-            })
-            return this;
-        },
-        // wrap: function (what) {
-        //     this.forEach(function () {
-        //         var p = this.parentNode;
-        //         what.
-        //     })
-        //     return this;
-        // }
+            $.className = cls.join(' ');
+        });
+        return this;
     };
+    Y.prototype.replaceClass = function (outClass, inClass) {
+        this.forEach(function () {
+            var $ = this,
+                cls = $.className.split(/\s/),
+                index = cls.indexOf(outClass);
+            if (index >= 0) {
+                cls.splice(index, 1);
+                cls.push(inClass)
+                $.className = cls.join(' ')
+            }
+        });
+        return this;
+    };
+    Y.prototype.html = function (h) {
+        if (typeof h === 'undefined') {
+            return this.els.map(function (el) {
+                return el.innerHTML
+            })
+        }
+        this.forEach(function () {
+            this.innerHTML = h
+        })
+        return this
+    };
+    Y.prototype.show = function () {
+        this.forEach(function () {
+            this.style.display = 'none';
+        });
+        return this;
+    };
+    Y.prototype.hide = function () {
+        this.forEach(function () {
+            this.style.display = '';
+        });
+        return this;
+    };
+    Y.prototype.toggle = function () {
+        this.forEach(function () {
+            this.style.display = this.style.display === 'none' ? '' : 'none'
+        })
+        return this;
+    };
+    Y.prototype.append = function (what) {
+        this.forEach(function () {
+            var p = this;
+            what.forEach(function () {
+                p.appendChild(this)
+            })
+        })
+        return this;
+    };
+    // wrap: function (what) {
+    //     this.forEach(function () {
+    //         var p = this.parentNode;
+    //         what.
+    //     })
+    //     return this;
+    // }
+    
     function factory(sel) {
         return new Y(sel);
     };
